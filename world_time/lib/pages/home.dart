@@ -14,7 +14,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    data = ModalRoute.of(context).settings.arguments;
+
+    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
+
     print(data);
 
     String image = data["isDayTime"] ? "day" : "night";
@@ -36,19 +38,27 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   FlatButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/location");
-                      },
-                      icon: Icon(
-                          Icons.edit_location,
-                        color: data["isDayTime"] ? Colors.black : Colors.white,
+                    onPressed: () async {
+                      dynamic result = await Navigator.pushNamed(context, "/location");
+                      setState(() {
+                        data = {
+                          "time": result["time"],
+                          "location": result["location"],
+                          "flag": result["flag"],
+                          "isDayTime": result["isDayTime"]
+                        };
+                      });
+                    },
+                    icon: Icon(
+                      Icons.edit_location,
+                      color: data["isDayTime"] ? Colors.white : Colors.white,
+                    ),
+                    label: Text(
+                        "Change Location",
+                      style: TextStyle(
+                        color: data["isDayTime"] ? Colors.white : Colors.white
                       ),
-                      label: Text(
-                          "Change Location",
-                        style: TextStyle(
-                          color: data["isDayTime"] ? Colors.black : Colors.white
-                        ),
-                      )
+                    )
                   ),
                   //SizedBox(height: 20.0,),
                   Row(
@@ -59,7 +69,7 @@ class _HomeState extends State<Home> {
                         style: TextStyle(
                           fontSize: 28.0,
                           letterSpacing: 2.0,
-                          color: data["isDayTime"] ? Colors.black : Colors.white,
+                          color: data["isDayTime"] ? Colors.white : Colors.white,
                         ),
                       ),
                     ],
@@ -69,7 +79,7 @@ class _HomeState extends State<Home> {
                     data["time"],
                     style: TextStyle(
                       fontSize: 66.0,
-                      color: data["isDayTime"] ? Colors.black : Colors.white,
+                      color: data["isDayTime"] ? Colors.white : Colors.white,
                     ),
                   )
                 ],
