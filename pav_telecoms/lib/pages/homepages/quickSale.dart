@@ -27,44 +27,67 @@ class QuickSale extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: GridView.count(
-        crossAxisCount: 3,
-        children: generateGrid(denominations, context),
-        padding: EdgeInsets.all(0.0),
-        //mainAxisSpacing: 30.0,
-        scrollDirection: Axis.vertical,
+      body: Container(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+        child: GridView.count(
+          crossAxisCount: 3,
+          children: generateGrid(denominations, context),
+          padding: EdgeInsets.all(0.0),
+          mainAxisSpacing: 30.0,
+          scrollDirection: Axis.vertical,
+        ),
       ),
     );
+    // return Scaffold(
+    //   body: Container(
+    //     child: SliverGrid.count(
+    //       crossAxisCount: 1,
+    //       children: generateGrid(denominations, context),
+    //     ),
+    //   )
+    // );
   }
 
   List<Widget> generateGrid(List<QuickSaleDenomination> list, context){
     List<Widget> result = List();
     list.forEach((element) {
       result.add(Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Image.asset(
-                      "assets/icons/${element.icon}.png",
-                      width: MediaQuery.of(context).size.width * 0.24,
-                    ),
-                  ),
-                  SizedBox(height: 5.0,),
-                  Text(element.description,),
-                ],
+        child: InkWell(
+          onTap: () {
+            showItemSnackbar(element, context);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Image.asset(
+                  "assets/icons/${element.icon}.png",
+                  width: MediaQuery.of(context).size.width * 0.28,
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 5.0,),
+              Text(element.description,),
+            ],
+          ),
         ),
       ),);
     });
     return result;
+  }
+
+  void showItemSnackbar(QuickSaleDenomination element, context){
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(element.description)
+        ],
+      ),
+      duration: Duration(milliseconds: 1000),
+      elevation: 30.0,
+      behavior: SnackBarBehavior.floating,
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class QuickSaleDenomination{
   String description;
   int productId;
