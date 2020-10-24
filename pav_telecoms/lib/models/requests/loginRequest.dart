@@ -4,4 +4,12 @@ class LoginRequest{
   String version;
 
   LoginRequest({this.terminalId, this.password, this.version});
+
+  Map<String, String> toMap(){
+    return {
+      'TerminalId': terminalId,
+      'Password': password,
+      'Version': version,
+    };
+  }
 }

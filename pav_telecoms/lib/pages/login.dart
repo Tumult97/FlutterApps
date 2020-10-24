@@ -4,6 +4,7 @@ import 'package:package_info/package_info.dart';
 import 'package:pav_telecoms/components/rounded_input_field.dart';
 import 'package:pav_telecoms/components/rounded_password_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pav_telecoms/code/connection.dart' as api;
 
 class Login extends StatefulWidget {
   @override
@@ -14,6 +15,9 @@ class _LoginState extends State<Login> {
   String terminalId = "";
   String password = "";
   SharedPreferences prefs;
+
+  BuildContext activity;
+  bool _isButtonDisabled = false;
 
   DeviceInfoPlugin _deviceInfoPlugin;
   String message = "";
@@ -27,6 +31,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    activity = context;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: FutureBuilder<AndroidDeviceInfo>(
@@ -74,23 +79,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.80,
-                    child: RaisedButton(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      color: Colors.blue[900],
-                      onPressed: () {
-                        print("TerminalId: $terminalId; Password: $password;");
-                        login(terminalId, password, context);
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(29.0),
-                      ),
-                      child: Text(
-                        "LOGIN",
-                        style: TextStyle(
-                            color: Colors.white
-                        ),
-                      ),
-                    ),
+                    child: buildLoginButton(context),
                   ),
                   SizedBox(
                     height: 30.0,
@@ -121,32 +110,29 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login(String terminalid, String password, BuildContext context) async {
+  void login() async {
+    setState(() {
+      _isButtonDisabled = true;
+    });
+
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
 
     if(password.isEmpty){
-      showItemSnackbar("Password Empty. Please enter password to Continue", context);
+      showItemSnackbar("Password Empty. Please enter password to Continue");
       return;
     }
 
+    var response = await api.Connection().login(terminalId, password);
+
+    showItemSnackbar(response.status.success.toString());
+
+    setState(() {
+      _isButtonDisabled = false;
+    });
   }
 
-  void showItemSnackbar(String element, context){
-    // final snackBar = SnackBar(
-    //   content: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: <Widget>[
-    //       Padding(
-    //         padding: const EdgeInsets.all(20.0),
-    //         child: Text(element),
-    //       )
-    //     ],
-    //   ),
-    //   duration: Duration(milliseconds: 2000),
-    //   elevation: 30.0,
-    //   behavior: SnackBarBehavior.floating,
-    // );
+  void showItemSnackbar(String element){
     final snackBar = SnackBar(
         content: Container(
         decoration:
@@ -170,12 +156,29 @@ class _LoginState extends State<Login> {
       elevation: 1000,
       behavior: SnackBarBehavior.floating,
     );
-    Scaffold.of(context).showSnackBar(snackBar);
+    Scaffold.of(activity).showSnackBar(snackBar);
   }
 
   void setUpVariables() async {
     prefs = await SharedPreferences.getInstance();
     await prefs.remove("Session");
+  }
+
+  Widget buildLoginButton(BuildContext context){
+    return RaisedButton(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      color: Colors.blue[900],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(29.0),
+      ),
+      child: Text(
+        _isButtonDisabled ? "PROCESSING" : "LOGIN",
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      onPressed: _isButtonDisabled ? null : login,
+    );
   }
 
 }
