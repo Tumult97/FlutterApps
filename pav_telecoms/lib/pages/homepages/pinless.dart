@@ -31,12 +31,12 @@ class _PinlessState extends State<Pinless> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
         child: GridView.count(
           crossAxisCount: 3,
-          mainAxisSpacing: 30.0,
           scrollDirection: Axis.vertical,
           children: generateGrid(list, context),
+          childAspectRatio: 1.1
         ),
       ),
     );
@@ -44,10 +44,11 @@ class _PinlessState extends State<Pinless> {
 
   List<Widget> generateGrid(List<PinlessIcon> list, context){
     List<Widget> result = <Widget>[];
+
     list.forEach((element) {
       result.add(Center(
-        child: InkWell(
-          onTap: () {
+        child: FlatButton(
+          onPressed: () {
             showItemSnackbar(element, context);
           },
           child: Column(
@@ -57,10 +58,9 @@ class _PinlessState extends State<Pinless> {
                 padding: EdgeInsets.all(0.0),
                 child: Image.asset(
                   "assets/icons/${element.icon}.png",
-                  width: MediaQuery.of(context).size.width * 0.28,
+                  width: MediaQuery.of(context).size.width * 0.24,
                 ),
               ),
-              SizedBox(height: 5.0,),
               Text("${element.name}")
             ],
           ),

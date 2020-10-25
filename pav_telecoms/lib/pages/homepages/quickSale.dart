@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pav_telecoms/models/quickSaleDenomination.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class QuickSale extends StatelessWidget {
   int counter = 0;
@@ -33,8 +34,9 @@ class QuickSale extends StatelessWidget {
           crossAxisCount: 3,
           children: generateGrid(denominations, context),
           padding: EdgeInsets.all(0.0),
-          mainAxisSpacing: 30.0,
+          //mainAxisSpacing: 30.0,
           scrollDirection: Axis.vertical,
+          childAspectRatio: 1.1,
         ),
       ),
     );
@@ -52,22 +54,25 @@ class QuickSale extends StatelessWidget {
     List<Widget> result = List();
     list.forEach((element) {
       result.add(Center(
-        child: InkWell(
-          onTap: () {
-            showItemSnackbar(element, context);
+        child: FlatButton(
+          onPressed: () {
+            //showItemSnackbar(element, context);
+            _openPopup(context);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Image.asset(
-                  "assets/icons/${element.icon}.png",
-                  width: MediaQuery.of(context).size.width * 0.28,
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Image.asset(
+                    "assets/icons/${element.icon}.png",
+                    width: MediaQuery.of(context).size.width * 0.24,
+                  ),
                 ),
               ),
-              SizedBox(height: 5.0,),
-              Text(element.description,),
+              Center(child: Text(element.description,))
             ],
           ),
         ),
@@ -89,5 +94,37 @@ class QuickSale extends StatelessWidget {
       behavior: SnackBarBehavior.floating,
     );
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  _openPopup(context) {
+    Alert(
+        context: context,
+        title: "Test",
+        content: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.account_circle),
+                labelText: 'Username',
+              ),
+            ),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock),
+                labelText: 'Password',
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "LOGIN",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/pages/homepages/pinless.dart';
 import 'package:pav_telecoms/pages/homepages/quickSale.dart';
 import 'package:pav_telecoms/pages/homepages/vendors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,8 +11,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<String> menuItems = ['Balance', 'Reports', 'Reprint', "Printer", "Logout"];
+  Map permissionsMap = {};
+  LoginResponse permissions;
+
+
   @override
   Widget build(BuildContext context) {
+    permissionsMap = ModalRoute.of(context).settings.arguments;
+    permissions = LoginResponse.fromJson(permissionsMap);
+
+    if(permissions.allowWalletTransfer){
+      menuItems.insert(4, "Wallet To Wallet");
+    }
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -19,7 +33,7 @@ class _HomeState extends State<Home> {
             PopupMenuButton<String>(
               onSelected: handleClick,
               itemBuilder: (BuildContext context) {
-                return {'Balance', 'Reports', 'Reprint', "Printer", "Logout"}.map((String choice) {
+                return menuItems.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),
@@ -69,5 +83,9 @@ class _HomeState extends State<Home> {
         break;
     }
   }
+
+  // void setUpPrefs() async {
+  //   prefs = await SharedPreferences.getInstance();
+  // }
 }
 
