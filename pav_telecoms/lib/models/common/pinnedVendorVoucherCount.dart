@@ -10,4 +10,12 @@ class PinnedVendorVoucherCount{
     name = json['Name'];
     voucherCount = json['VoucherCount'];
   }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['VendorId'] = this.vendorId;
+    data['Name'] = this.name;
+    data['VoucherCount'] = this.voucherCount;
+    return data;
+  }
 }

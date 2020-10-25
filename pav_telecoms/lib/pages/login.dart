@@ -5,6 +5,7 @@ import 'package:pav_telecoms/components/rounded_input_field.dart';
 import 'package:pav_telecoms/components/rounded_password_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pav_telecoms/code/connection.dart' as api;
+import 'dart:convert';
 
 class Login extends StatefulWidget {
   @override
@@ -15,10 +16,8 @@ class _LoginState extends State<Login> {
   String terminalId = "";
   String password = "";
   SharedPreferences prefs;
-
-  BuildContext activity;
   bool _isButtonDisabled = false;
-
+  var function;
   DeviceInfoPlugin _deviceInfoPlugin;
   String message = "";
 
@@ -31,7 +30,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    activity = context;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: FutureBuilder<AndroidDeviceInfo>(
@@ -110,7 +108,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login() async {
+  void login(BuildContext context) async {
     setState(() {
       _isButtonDisabled = true;
     });
@@ -119,20 +117,33 @@ class _LoginState extends State<Login> {
     String version = packageInfo.version;
 
     if(password.isEmpty){
-      showItemSnackbar("Password Empty. Please enter password to Continue");
+      showItemSnackBar("Password Empty. Please enter password to Continue", context);
+      setState(() {
+        _isButtonDisabled = false;
+      });
       return;
     }
 
     var response = await api.Connection().login(terminalId, password);
 
-    showItemSnackbar(response.status.success.toString());
+    if(!response.status.success){
+      showItemSnackBar(response.status.message, context);
+      setState(() {
+        _isButtonDisabled = false;
+      });
+      return;
+    }
 
-    setState(() {
-      _isButtonDisabled = false;
-    });
+    var resObj = response.toMap();
+
+    Navigator.pushReplacementNamed(context, "/home", arguments: resObj);
+
+    // setState(() {
+    //   _isButtonDisabled = false;
+    // });
   }
 
-  void showItemSnackbar(String element){
+  void showItemSnackBar(String element, BuildContext context){
     final snackBar = SnackBar(
         content: Container(
         decoration:
@@ -156,7 +167,7 @@ class _LoginState extends State<Login> {
       elevation: 1000,
       behavior: SnackBarBehavior.floating,
     );
-    Scaffold.of(activity).showSnackBar(snackBar);
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void setUpVariables() async {
@@ -165,6 +176,9 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildLoginButton(BuildContext context){
+    var function = () => {
+      login(context)
+    };
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       color: Colors.blue[900],
@@ -177,7 +191,7 @@ class _LoginState extends State<Login> {
             color: Colors.white
         ),
       ),
-      onPressed: _isButtonDisabled ? null : login,
+      onPressed: _isButtonDisabled ? null : function,
     );
   }
 

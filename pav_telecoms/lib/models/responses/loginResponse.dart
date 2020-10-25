@@ -38,6 +38,8 @@ class LoginResponse{
   bool allowOTTVend;
   bool allowWalletTransfer;
 
+  LoginResponse({this.status, this.isAdmin, this.clientId, this.userId, this.accessLevel, this.clientName, this.enableAdvancedPos, this.printStoreSlipCopy, this.printBarCodeOnStoreSlip, this.printBarcodeOnCustomerSlip, this.electricityType, this.allowSales, this.allowReprint, this.voucherReports, this.rica, this.shift, this.headerText1, this.headerText2, this.headerText3, this.footerText1, this.footerText2, this.footerText3, this.enablePasswordOnVend, this.whiteLabelCompanyName, this.electricityActive, this.vendorVoucherCounts, this.allowDSTV, this.smartCallVoucherCounts, this.allowPinlessElectrivityVending, this.mabonengVoucherCount, this.clientCode, this.allowLotto, this.allowOTTVend, this.allowWalletTransfer});
+
   LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['Status'] != null ? new Status.fromJson(json['Status']) : null;
     isAdmin = json['IsAdmin'];
@@ -83,5 +85,53 @@ class LoginResponse{
     allowLotto = json['AllowLotto'];
     allowOTTVend = json['AllowOTTVend'];
     allowWalletTransfer = json['AllowWalletTransfer'];
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.status != null) {
+      data['Status'] = this.status.toMap();
+    }
+    data['IsAdmin'] = this.isAdmin;
+    data['ClientId'] = this.clientId;
+    data['UserId'] = this.userId;
+    data['AccessLevel'] = this.accessLevel;
+    data['ClientName'] = this.clientName;
+    data['EnableAdvancedPos'] = this.enableAdvancedPos;
+    data['PrintStoreSlipCopy'] = this.printStoreSlipCopy;
+    data['PrintBarCodeOnStoreSlip'] = this.printBarCodeOnStoreSlip;
+    data['PrintBarcodeOnCustomerSlip'] = this.printBarcodeOnCustomerSlip;
+    data['ElectricityType'] = this.electricityType;
+    data['AllowSales'] = this.allowSales;
+    data['AllowReprint'] = this.allowReprint;
+    data['VoucherReports'] = this.voucherReports;
+    data['Rica'] = this.rica;
+    data['Shift'] = this.shift;
+    data['HeaderText1'] = this.headerText1;
+    data['HeaderText2'] = this.headerText2;
+    data['HeaderText3'] = this.headerText3;
+    data['FooterText1'] = this.footerText1;
+    data['FooterText2'] = this.footerText2;
+    data['FooterText3'] = this.footerText3;
+    data['EnablePasswordOnVend'] = this.enablePasswordOnVend;
+    data['WhiteLabelCompanyName'] = this.whiteLabelCompanyName;
+    data['ElectricityActive'] = this.electricityActive;
+    if (this.vendorVoucherCounts != null) {
+      data['VendorVoucherCounts'] =
+          this.vendorVoucherCounts.map((v) => v.toMap()).toList();
+    }
+    data['AllowDSTV'] = this.allowDSTV;
+    if (this.smartCallVoucherCounts != null) {
+      data['SmartCallVoucherCounts'] =
+          this.smartCallVoucherCounts.map((v) => v.toMap()).toList();
+    }
+    data['AllowPinlessElectrivityVending'] =
+        this.allowPinlessElectrivityVending;
+    data['MabonengVoucherCount'] = this.mabonengVoucherCount;
+    data['ClientCode'] = this.clientCode;
+    data['AllowLotto'] = this.allowLotto;
+    data['AllowOTTVend'] = this.allowOTTVend;
+    data['AllowWalletTransfer'] = this.allowWalletTransfer;
+    return data;
   }
 }

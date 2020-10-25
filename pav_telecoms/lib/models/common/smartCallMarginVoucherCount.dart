@@ -8,4 +8,11 @@ class SmartCallMarginVoucherCount{
     network = json['Network'];
     count = json['Count'];
   }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Network'] = this.network;
+    data['Count'] = this.count;
+    return data;
+  }
 }
