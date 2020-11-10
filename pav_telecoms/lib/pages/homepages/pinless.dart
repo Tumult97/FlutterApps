@@ -1,17 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:pav_telecoms/models/pinlessIcon.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 
 class Pinless extends StatefulWidget {
   List<PinlessIcon> list = [];
 
-  Pinless(permissions){
-    list.add(PinlessIcon(name: "Vodacom", icon: "vodacom", network: "vodacom"));
-    list.add(PinlessIcon(name: "MTN", icon: "mtn", network: "mtn"));
-    list.add(PinlessIcon(name: "Cell C", icon: "cellc", network: "cellc"));
-    list.add(PinlessIcon(name: "Telkom", icon: "telkom", network: "telkom"));
-    list.add(PinlessIcon(name: "Virgin", icon: "virgin", network: "virgin"));
-    list.add(PinlessIcon(name: "DSTV", icon: "dstv", network: "dstv"));
-    list.add(PinlessIcon(name: "Electricity", icon: "electricity", network: "electricity"));
+  Pinless(LoginResponse permissions){
+    permissions.smartCallVoucherCounts.forEach((element) {
+      switch(element.network){
+        case "Vodacom":
+          if(element.count > 0){
+            list.add(PinlessIcon(name: "Vodacom", icon: "vodacom", network: 1));
+          }
+          break;
+        case "MTN":
+          if(element.count > 0){
+            list.add(PinlessIcon(name: "MTN", icon: "mtn", network: 2));
+          }
+          break;
+        case "Cell C":
+          if(element.count > 0){
+            list.add(PinlessIcon(name: "Cell C", icon: "cellc", network: 3));
+          }
+          break;
+        case "Telkom Mobile":
+          if(element.count > 0){
+            list.add(PinlessIcon(name: "Telkom", icon: "telkom", network: 9));
+          }
+          break;
+        case "Virgin Mobile":
+          if(element.count > 0){
+            list.add(PinlessIcon(name: "Virgin", icon: "virgin", network: 12));
+          }
+          break;
+        case "":
+          list.add(PinlessIcon(name: "Vodacom", icon: "vodacom", network: 1));
+          list.add(PinlessIcon(name: "MTN", icon: "mtn", network: 2));
+          list.add(PinlessIcon(name: "Cell C", icon: "cellc", network: 3));
+          list.add(PinlessIcon(name: "Telkom", icon: "telkom", network: 9));
+          list.add(PinlessIcon(name: "Virgin", icon: "virgin", network: 12));
+          break;
+      }
+    });
+
+    if(permissions.allowDSTV){
+      list.add(PinlessIcon(name: "DSTV", icon: "dstv", network: 99));
+    }
+
+    if(permissions.allowPinlessElectrivityVending){
+      list.add(PinlessIcon(name: "Electricity", icon: "electricity", network: -1));
+    }
   }
 
   @override

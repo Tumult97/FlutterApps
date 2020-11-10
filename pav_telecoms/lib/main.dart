@@ -8,6 +8,7 @@ void main() {
     initialRoute: "/",
     routes: {
       "/": (context) => Login(),
+      "/login": (context) => Login(),
       "/home": (context) => Home(),
     },
   ));

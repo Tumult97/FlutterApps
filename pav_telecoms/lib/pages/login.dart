@@ -15,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String terminalId = "";
   String password = "";
+  String deviceManufacturer;
   SharedPreferences prefs;
   bool _isButtonDisabled = false;
   var function;
@@ -41,9 +42,10 @@ class _LoginState extends State<Login> {
             );
           }
           else {
-            // final androidDeviceInfo = snapshot.data;
-            // terminalId = androidDeviceInfo.androidId;
+            final androidDeviceInfo = snapshot.data;
+            terminalId = androidDeviceInfo.androidId;
             terminalId = "06d598a7dede6530";
+            deviceManufacturer = androidDeviceInfo.manufacturer;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,6 +136,7 @@ class _LoginState extends State<Login> {
       return;
     }
 
+    response.manufacturer = deviceManufacturer;
     var resObj = response.toMap();
 
     Navigator.pushReplacementNamed(context, "/home", arguments: resObj);

@@ -1,31 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:pav_telecoms/models/common/pinnedVendorVoucherCount.dart';
 import 'package:pav_telecoms/models/quickSaleDenomination.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class QuickSale extends StatelessWidget {
-  int counter = 0;
+class QuickSale extends StatefulWidget {
+  LoginResponse permissions;
+  List<QuickSaleDenomination> denominations = [];
 
-  List<QuickSaleDenomination> denominations = [
-    QuickSaleDenomination(description: "Vodacom R5", productId: 01, icon: "vodacom", value: "5.00"),
-    QuickSaleDenomination(description: "Vodacom R12", productId: 02, icon: "vodacom", value: "5.00"),
-    QuickSaleDenomination(description: "Vodacom R29", productId: 03, icon: "vodacom", value: "5.00"),
-    QuickSaleDenomination(description: "MTN R5", productId: 04, icon: "mtn", value: "5.00"),
-    QuickSaleDenomination(description: "MTN R10", productId: 05, icon: "mtn", value: "5.00"),
-    QuickSaleDenomination(description: "MTN R15", productId: 06, icon: "mtn", value: "5.00"),
-    QuickSaleDenomination(description: "CellC R5", productId: 07, icon: "cellc", value: "5.00"),
-    QuickSaleDenomination(description: "CellC R10", productId: 08, icon: "cellc", value: "5.00"),
-    QuickSaleDenomination(description: "CellC R25", productId: 09, icon: "cellc", value: "5.00"),
-    QuickSaleDenomination(description: "Telkom R5", productId: 10, icon: "telkom", value: "5.00"),
-    QuickSaleDenomination(description: "Telkom R10", productId: 11, icon: "telkom", value: "5.00"),
-    QuickSaleDenomination(description: "Telkom R20", productId: 12, icon: "telkom", value: "5.00"),
-  ];
+  QuickSale(LoginResponse permissions){
+    this.permissions = permissions;
+    permissions.vendorVoucherCounts.forEach((PinnedVendorVoucherCount element) {
+      switch(element.vendorId){
+        case 1:
+          denominations.addAll(
+              [QuickSaleDenomination(description: "Vodacom R5", productId: 38, icon: "vodacom", value: "5.00"),
+                QuickSaleDenomination(description: "Vodacom R12", productId: 29, icon: "vodacom", value: "12.00"),
+                QuickSaleDenomination(description: "Vodacom R29", productId: 30, icon: "vodacom", value: "29.00"),]
+          );
+          break;
+        case 2:
+          denominations.addAll(
+              [QuickSaleDenomination(description: "MTN R5", productId: 14, icon: "mtn", value: "5.00"),
+                QuickSaleDenomination(description: "MTN R10", productId: 15, icon: "mtn", value: "10.00"),
+                QuickSaleDenomination(description: "MTN R15", productId: 16, icon: "mtn", value: "15.00"),]
+          );
+          break;
+        case 3:
+          denominations.addAll(
+              [QuickSaleDenomination(description: "CellC R5", productId: 1, icon: "cellc", value: "5.00"),
+                QuickSaleDenomination(description: "CellC R10", productId: 2, icon: "cellc", value: "10.00"),
+                QuickSaleDenomination(description: "CellC R25", productId: 3, icon: "cellc", value: "25.00"),]
+          );
+          break;
+        case 23:
+          denominations.addAll(
+              [QuickSaleDenomination(description: "Telkom R5", productId: 57, icon: "telkom", value: "5.00"),
+                QuickSaleDenomination(description: "Telkom R10", productId: 58, icon: "telkom", value: "10.00"),
+                QuickSaleDenomination(description: "Telkom R20", productId: 59, icon: "telkom", value: "20.00"),]
+          );
+          break;
+      }
+    });
+  }
 
-  QuickSale(num){
-    counter = num;
+  @override
+  _QuickSaleState createState() => _QuickSaleState(denominations);
+}
+
+class _QuickSaleState extends State<QuickSale> {
+
+  List<QuickSaleDenomination> denominations = [];
+
+  _QuickSaleState(List<QuickSaleDenomination> list){
+    denominations = list;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
@@ -96,7 +131,23 @@ class QuickSale extends StatelessWidget {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  _openPopup(context) {
+  _openPopup(context) async {
+    FlutterBlue flutterBlue = FlutterBlue.instance;
+
+    // Start scanning
+    flutterBlue.startScan(timeout: Duration(seconds: 4));
+
+    // Listen to scan results
+    var subscription = flutterBlue.scanResults.listen((results) {
+      // do something with scan results
+      for (ScanResult r in results) {
+        print('${r.device.name} found! rssi: ${r.rssi}');
+      }
+    });
+
+    // Stop scanning
+    flutterBlue.stopScan();
+
     Alert(
         context: context,
         title: "Test",

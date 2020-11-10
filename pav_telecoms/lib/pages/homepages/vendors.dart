@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/models/vendor.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -7,22 +8,57 @@ class Vendors extends StatefulWidget {
   List<Vendor> vendorList = [];
   final List<Map<String, dynamic>> data = List();
 
-  Vendors(permissions){
-    vendorList.add(Vendor(name: "Vodacom", data: false, icon: "vodacom", network: "vodacom", dataIcon: ""));
-    vendorList.add(Vendor(name: "Vodacom Data", data: true, icon: "vodacom", network: "vodacom", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "MTN", data: false, icon: "mtn", network: "mtn", dataIcon: ""));
-    vendorList.add(Vendor(name: "MTN Data", data: true, icon: "mtn", network: "mtn", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Cell C", data: false, icon: "cellc", network: "cellc", dataIcon: ""));
-    vendorList.add(Vendor(name: "Cell C Data", data: true, icon: "cellc", network: "cellc", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Telkom", data: false, icon: "telkom", network: "telkom", dataIcon: ""));
-    vendorList.add(Vendor(name: "Telkom Data", data: true, icon: "telkom", network: "telkom", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Lotto", data: false, icon: "lotto", network: "lotto", dataIcon: ""));
-    vendorList.add(Vendor(name: "Virgin", data: false, icon: "virgin", network: "virgin", dataIcon: ""));
-    vendorList.add(Vendor(name: "Electricity", data: false, icon: "electricity", network: "electricity", dataIcon: ""));
-    vendorList.add(Vendor(name: "Rise", data: false, icon: "rise", network: "risetelecoms", dataIcon: ""));
-    vendorList.add(Vendor(name: "OTT Mobile", data: false, icon: "pav", network: "ottmobile", dataIcon: ""));
-    vendorList.add(Vendor(name: "Neotel", data: false, icon: "neotel", network: "neotel", dataIcon: ""));
-    vendorList.add(Vendor(name: "PAV Test", data: false, icon: "pav", network: "pav", dataIcon: ""));
+  Vendors(LoginResponse permissions){
+
+    permissions.vendorVoucherCounts.forEach((element) {
+      switch(element.vendorId) {
+        case 1:
+          vendorList.add(Vendor(name: "Vodacom", data: false, icon: "vodacom", network: 1, dataIcon: ""));
+          vendorList.add(Vendor(name: "Vodacom Data", data: true, icon: "vodacom", network: 1, dataIcon: "-data"));
+          break;
+        case 2:
+          vendorList.add(Vendor(name: "MTN", data: false, icon: "mtn", network: 2, dataIcon: ""));
+          break;
+        case 26:
+          vendorList.add(Vendor(name: "MTN Data", data: true, icon: "mtn", network: 26, dataIcon: "-data"));
+          break;
+        case 3:
+          vendorList.add(Vendor(name: "Cell C", data: false, icon: "cellc", network: 3, dataIcon: ""));
+          vendorList.add(Vendor(name: "Cell C Data", data: true, icon: "cellc", network: 3, dataIcon: "-data"));
+          break;
+        case 23:
+          vendorList.add(Vendor(name: "Telkom", data: false, icon: "telkom", network: 23, dataIcon: ""));
+          break;
+        case 4:
+          vendorList.add(Vendor(name: "Telkom Data", data: true, icon: "telkom", network: 4, dataIcon: "-data"));
+          break;
+        case 13:
+          vendorList.add(Vendor(name: "Virgin", data: false, icon: "virgin", network: 13, dataIcon: ""));
+          break;
+        case 29:
+          vendorList.add(Vendor(name: "Neotel", data: false, icon: "neotel", network: 29, dataIcon: ""));
+          break;
+        case 12:
+          vendorList.add(Vendor(name: "PAV Test", data: false, icon: "pav", network: 12, dataIcon: ""));
+          break;
+      }
+    });
+
+    if(permissions.electricityActive){
+      vendorList.add(Vendor(name: "Electricity", data: false, icon: "electricity", network: -1, dataIcon: ""));
+    }
+
+    if(permissions.mabonengVoucherCount){
+      vendorList.add(Vendor(name: "Rise", data: false, icon: "rise", network: 0, dataIcon: ""));
+    }
+
+    if(permissions.allowLotto && permissions.manufacturer == "SUNMI"){
+      vendorList.add(Vendor(name: "Lotto", data: false, icon: "lotto", network: -1, dataIcon: ""));
+    }
+
+    if(permissions.allowOTTVend){
+      vendorList.add(Vendor(name: "OTT Mobile", data: false, icon: "pav", network: 0, dataIcon: ""));
+    }
   }
 
   @override

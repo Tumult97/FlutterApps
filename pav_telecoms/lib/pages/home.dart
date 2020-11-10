@@ -66,9 +66,9 @@ class _HomeState extends State<Home> {
         ),
         body: TabBarView(
           children: [
-            QuickSale(5),
-            Vendors(5),
-            Pinless(5),
+            QuickSale(permissions),
+            Vendors(permissions),
+            Pinless(permissions),
           ],
         ),
       ),
@@ -78,8 +78,8 @@ class _HomeState extends State<Home> {
   void handleClick(String value) {
     switch (value) {
       case 'Logout':
-        break;
-      case 'Settings':
+        Navigator.pushReplacementNamed(context, "/login");
+        return;
         break;
     }
   }
