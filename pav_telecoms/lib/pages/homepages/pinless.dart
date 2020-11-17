@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pav_telecoms/models/pinlessIcon.dart';
 import 'package:pav_telecoms/models/responses/loginResponse.dart';
 
-class Pinless extends StatefulWidget {
+class Pinless extends StatelessWidget {
   List<PinlessIcon> list = [];
 
   Pinless(LoginResponse permissions){
@@ -53,28 +53,15 @@ class Pinless extends StatefulWidget {
   }
 
   @override
-  _PinlessState createState() => _PinlessState(list);
-}
-
-class _PinlessState extends State<Pinless> {
-
-  List<PinlessIcon> list = [];
-
-  _PinlessState(List<PinlessIcon> list){
-    this.list = list;
-    //super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
         child: GridView.count(
-          crossAxisCount: 3,
-          scrollDirection: Axis.vertical,
-          children: generateGrid(list, context),
-          childAspectRatio: 1.1
+            crossAxisCount: 3,
+            scrollDirection: Axis.vertical,
+            children: generateGrid(list, context),
+            childAspectRatio: 1.1
         ),
       ),
     );

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:pav_telecoms/models/common/pinnedVendorVoucherCount.dart';
 import 'package:pav_telecoms/models/quickSaleDenomination.dart';
 import 'package:pav_telecoms/models/responses/loginResponse.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
-class QuickSale extends StatefulWidget {
+class QuickSale extends StatelessWidget {
   LoginResponse permissions;
   List<QuickSaleDenomination> denominations = [];
 
@@ -46,21 +44,7 @@ class QuickSale extends StatefulWidget {
   }
 
   @override
-  _QuickSaleState createState() => _QuickSaleState(denominations);
-}
-
-class _QuickSaleState extends State<QuickSale> {
-
-  List<QuickSaleDenomination> denominations = [];
-
-  _QuickSaleState(List<QuickSaleDenomination> list){
-    denominations = list;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
@@ -75,14 +59,6 @@ class _QuickSaleState extends State<QuickSale> {
         ),
       ),
     );
-    // return Scaffold(
-    //   body: Container(
-    //     child: SliverGrid.count(
-    //       crossAxisCount: 1,
-    //       children: generateGrid(denominations, context),
-    //     ),
-    //   )
-    // );
   }
 
   List<Widget> generateGrid(List<QuickSaleDenomination> list, context){
@@ -92,7 +68,7 @@ class _QuickSaleState extends State<QuickSale> {
         child: FlatButton(
           onPressed: () {
             //showItemSnackbar(element, context);
-            _openPopup(context);
+            showItemSnackbar(element, context);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -129,53 +105,5 @@ class _QuickSaleState extends State<QuickSale> {
       behavior: SnackBarBehavior.floating,
     );
     Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  _openPopup(context) async {
-    FlutterBlue flutterBlue = FlutterBlue.instance;
-
-    // Start scanning
-    flutterBlue.startScan(timeout: Duration(seconds: 4));
-
-    // Listen to scan results
-    var subscription = flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-    });
-
-    // Stop scanning
-    flutterBlue.stopScan();
-
-    Alert(
-        context: context,
-        title: "Test",
-        content: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-        ),
-        buttons: [
-          DialogButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "LOGIN",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ]).show();
   }
 }

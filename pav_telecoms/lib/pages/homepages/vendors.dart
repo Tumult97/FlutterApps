@@ -4,7 +4,7 @@ import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/models/vendor.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class Vendors extends StatefulWidget {
+class Vendors extends StatelessWidget {
   List<Vendor> vendorList = [];
   final List<Map<String, dynamic>> data = List();
 
@@ -61,37 +61,7 @@ class Vendors extends StatefulWidget {
     }
   }
 
-  @override
-  _VendorsState createState() => _VendorsState(vendorList);
-}
 
-class _VendorsState extends State<Vendors> {
-  List<Vendor> vendorList = [];
-  // PrinterBluetoothManager _printerManager = PrinterBluetoothManager();
-  // List<PrinterBluetooth> _devices = [];
-  // String _devicesMsg;
-  // BluetoothManager bluetoothManager = BluetoothManager.instance;
-
-  _VendorsState(List<Vendor> list){
-    vendorList = list;
-    checkPermissions();
-    // if (Platform.isAndroid) {
-    //   bluetoothManager.state.listen((val) {
-    //     print('state = $val');
-    //     if (!mounted) return;
-    //     if (val == 12) {
-    //       print('on');
-    //       initPrinter();
-    //     } else if (val == 10) {
-    //       print('off');
-    //       setState(() => _devicesMsg = 'Bluetooth Disconnect!');
-    //     }
-    //   });
-    // } else {
-    //   initPrinter();
-    // }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,89 +125,4 @@ class _VendorsState extends State<Vendors> {
     );
     Scaffold.of(context).showSnackBar(snackBar);
   }
-
-  void checkPermissions() async {
-    print("---------------------------------------------------------------------------------");
-    FlutterBlue flutterBlue = FlutterBlue.instance;
-    // Start scanning
-    flutterBlue.startScan(timeout: Duration(seconds: 10));
-    var subscription = flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-    });
-
-// Stop scanning
-    flutterBlue.stopScan();
-  }
-
-  // Future sleep() {
-  //   return new Future.delayed(const Duration(seconds: 11), () => "1");
-  // }
-  //
-  // void initPrinter() async {
-  //   _printerManager.startScan(Duration(seconds: 10));
-  //   await sleep();
-  //   _printerManager.scanResults.listen((val) {
-  //     if (!mounted) return;
-  //     setState(() => _devices = val);
-  //     if (_devices.isEmpty) setState(() => _devicesMsg = 'No Devices');
-  //   });
-  // }
-  //
-  // Future<void> _startPrint(PrinterBluetooth printer) async {
-  //   _printerManager.selectPrinter(printer);
-  //   final result = await _printerManager.printTicket(await _ticket(PaperSize.mm80));
-  //   showDialog(
-  //     context: context,
-  //     builder: (_) => AlertDialog(
-  //       content: Text(result.msg),
-  //     ),
-  //   );
-  // }
-  //
-  // Future<Ticket> _ticket(PaperSize paper) async {
-  //   final ticket = Ticket(paper);
-  //   int total = 0;
-  //
-  //   // Image assets
-  //   final ByteData data = await rootBundle.load('assets/store.png');
-  //   final Uint8List bytes = data.buffer.asUint8List();
-  //   final FileImage.Image image = FileImage.decodeImage(bytes);
-  //   ticket.image(image);
-  //   ticket.text(
-  //     'TOKO KU',
-  //     styles: PosStyles(align: PosAlign.center,height: PosTextSize.size2,width: PosTextSize.size2),
-  //     linesAfter: 1,
-  //   );
-  //
-  //   for (var i = 0; i < widget.data.length; i++) {
-  //     total += widget.data[i]['total_price'];
-  //     ticket.text(widget.data[i]['title']);
-  //     ticket.row([
-  //       PosColumn(
-  //           text: '${widget.data[i]['price']} x ${widget.data[i]['qty']}',
-  //           width: 6),
-  //       PosColumn(text: 'Rp ${widget.data[i]['total_price']}', width: 6),
-  //     ]);
-  //   }
-  //
-  //   ticket.feed(1);
-  //   ticket.row([
-  //     PosColumn(text: 'Total', width: 6, styles: PosStyles(bold: true)),
-  //     PosColumn(text: 'Rp $total', width: 6, styles: PosStyles(bold: true)),
-  //   ]);
-  //   ticket.feed(2);
-  //   ticket.text('Thank You',styles: PosStyles(align: PosAlign.center, bold: true));
-  //   ticket.cut();
-  //
-  //   return ticket;
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   _printerManager.stopScan();
-  //   super.dispose();
-  // }
 }

@@ -15,8 +15,8 @@ import 'package:pav_telecoms/models/responses/salesSummaryResponse.dart';
 import 'package:pav_telecoms/models/responses/salesSummaryUserResponse.dart';
 
 class Connection{
-  final String apiBaseUrl = "https://liveapi.pavtelecoms.co.za/7.0.10";
-  Map<String,String> headers = {
+  static final String apiBaseUrl = "https://liveapi.pavtelecoms.co.za/7.0.10";
+  static Map<String,String> headers = {
     'Content-type' : 'application/json',
     'Accept': 'application/json',
   };
@@ -43,7 +43,7 @@ class Connection{
     return response;
   }
 
-  Future<SalesSummaryResponse> salesSummary(String terminalId) async {
+  static Future<SalesSummaryResponse> salesSummary(String terminalId) async {
     SalesSummaryResponse response;
 
     SalesSummaryRequest request = SalesSummaryRequest(terminalId: terminalId);
@@ -62,7 +62,7 @@ class Connection{
     return response;
   }
 
-  Future<SalesSummaryUserResponse> salesSummaryUser(String terminalId) async {
+  static Future<SalesSummaryUserResponse> salesSummaryUser(String terminalId) async {
     SalesSummaryUserResponse response;
 
     SalesSummaryUserRequest request = SalesSummaryUserRequest(terminalId: terminalId);
@@ -81,7 +81,7 @@ class Connection{
     return response;
   }
 
-  Future<BankingDetailsResponse> bankingDetails(String terminalId) async {
+  static Future<BankingDetailsResponse> bankingDetails(String terminalId) async {
     BankingDetailsResponse response;
 
     BankingDetailsRequest request = BankingDetailsRequest(terminalId: terminalId);
@@ -100,7 +100,7 @@ class Connection{
     return response;
   }
 
-  Future<BalanceResponse> balance(String terminalId, int clientId) async {
+  static Future<BalanceResponse> balance(String terminalId, int clientId) async {
     BalanceResponse response;
 
     BalanceRequest request = BalanceRequest(terminalId: terminalId, clientId: clientId);

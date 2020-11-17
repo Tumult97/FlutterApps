@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     permissionsMap = ModalRoute.of(context).settings.arguments;
-    permissions = LoginResponse.fromJson(permissionsMap);
+    permissions = LoginResponse.fromJson(permissionsMap["permissions"]);
 
     if(permissions.allowWalletTransfer){
       menuItems.insert(4, "Wallet To Wallet");
@@ -79,6 +79,14 @@ class _HomeState extends State<Home> {
     switch (value) {
       case 'Logout':
         Navigator.pushReplacementNamed(context, "/login");
+        return;
+        break;
+      case 'Reports':
+        Navigator.pushNamed(context, "/reports", arguments: permissionsMap);
+        return;
+        break;
+      case 'Reports':
+        Navigator.pushNamed(context, "/reports");
         return;
         break;
     }

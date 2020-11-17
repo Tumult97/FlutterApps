@@ -36,6 +36,10 @@ dependencies:
   shared_preferences: ^0.5.12+2
   http: ^0.12.2
   package_info: ^0.4.0+16
+  date_time_picker: ^1.0.2
+  flutter_datetime_picker: ^1.4.0
+  ticketview: ^1.0.0
+  google_fonts: ^1.1.1
 
 dev_dependencies:
   flutter_test:

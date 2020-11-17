@@ -45,6 +45,7 @@ class _LoginState extends State<Login> {
             final androidDeviceInfo = snapshot.data;
             terminalId = androidDeviceInfo.androidId;
             terminalId = "06d598a7dede6530";
+            //terminalId = "86515003237147";
             deviceManufacturer = androidDeviceInfo.manufacturer;
             return Center(
               child: Column(
@@ -139,7 +140,11 @@ class _LoginState extends State<Login> {
     response.manufacturer = deviceManufacturer;
     var resObj = response.toMap();
 
-    Navigator.pushReplacementNamed(context, "/home", arguments: resObj);
+    Map perms = new Map();
+    perms["permissions"] = resObj;
+    perms["terminal"] = terminalId;
+
+    Navigator.pushReplacementNamed(context, "/home", arguments: perms);
 
     // setState(() {
     //   _isButtonDisabled = false;
