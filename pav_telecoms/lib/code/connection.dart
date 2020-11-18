@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:pav_telecoms/models/common/status.dart';
 import 'package:pav_telecoms/models/requests/balanceRequest.dart';
 import 'package:pav_telecoms/models/requests/bankingDetailsRequest.dart';
@@ -15,7 +15,8 @@ import 'package:pav_telecoms/models/responses/salesSummaryResponse.dart';
 import 'package:pav_telecoms/models/responses/salesSummaryUserResponse.dart';
 
 class Connection{
-  static final String apiBaseUrl = "https://liveapi.pavtelecoms.co.za/7.0.10";
+  //static final String apiBaseUrl = "https://liveapi.pavtelecoms.co.za/7.0.10";
+  static final String apiBaseUrl = "https://liveapi.pavtelecoms.co.za/pavtest";
   static Map<String,String> headers = {
     'Content-type' : 'application/json',
     'Accept': 'application/json',
@@ -43,12 +44,12 @@ class Connection{
     return response;
   }
 
-  static Future<SalesSummaryResponse> salesSummary(String terminalId) async {
+  static Future<SalesSummaryResponse> salesSummary(String terminalId, DateTime dateFrom, DateTime dateTo, int userId) async {
     SalesSummaryResponse response;
+    final DateFormat formatter = DateFormat('yyyy/MM/dd HH:mm');
 
-    SalesSummaryRequest request = SalesSummaryRequest(terminalId: terminalId);
+    SalesSummaryRequest request = SalesSummaryRequest(terminalId: terminalId, dateFrom: formatter.format(dateFrom), dateTo: formatter.format(dateTo), userId: userId);
     var body = json.encode(request.toMap());
-
     try{
       String url = "$apiBaseUrl/Reports.svc/SalesSummary";
       var httpResponse = await http.post(url, body: body, headers: headers);

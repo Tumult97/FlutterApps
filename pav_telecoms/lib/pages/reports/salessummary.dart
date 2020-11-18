@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/models/responses/salesSummaryResponse.dart';
 import 'package:pav_telecoms/code/connection.dart' as api;
 import 'package:ticketview/ticketview.dart';
@@ -13,17 +13,22 @@ class SalesSummary extends StatefulWidget {
 
 class _SalesSummaryState extends State<SalesSummary> {
   SalesSummaryResponse response;
+  Map arguments = {};
   Map permissionsMap = {};
   String terminalId = "";
   Widget slip;
+  DateTime dateFrom;
+  DateTime dateTo;
+  LoginResponse permissions;
   var report = "";
 
   @override
   Widget build(BuildContext context) {
-    permissionsMap = ModalRoute.of(context).settings.arguments;
+    arguments = ModalRoute.of(context).settings.arguments;
+    permissionsMap = arguments["permissions"];
     terminalId = permissionsMap["terminal"];
-
     report = "";
+    permissions = LoginResponse.fromJson(permissionsMap["permissions"]);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +36,7 @@ class _SalesSummaryState extends State<SalesSummary> {
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder<SalesSummaryResponse>(
-        future: api.Connection.salesSummary(terminalId),
+        future: api.Connection.salesSummary(terminalId, dateFrom, dateTo, permissions.userId),
         builder: (BuildContext context, AsyncSnapshot<SalesSummaryResponse> snapshot){
           if(!snapshot.hasData){
             return Center(
@@ -107,36 +112,6 @@ class _SalesSummaryState extends State<SalesSummary> {
                   child: Text("Print"),
                 )
               ],
-            );
-
-            return Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: TicketView(
-                contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 0),
-                contentBackgroundColor: Colors.grey[200],
-                drawArc: false,
-                drawTriangle: false,
-                drawShadow: true,
-                drawBorder: true,
-                triangleAxis: Axis.vertical,
-                drawDivider: false,
-                child: Container(
-                  color: Colors.red,
-                  child: ListView.builder(
-                    itemCount: response.report.length,
-                    itemBuilder: (context, index){
-                      print(response.report[index].text);
-                      return Text(
-                        response.report[index].text.trim(),
-                        style: TextStyle(
-                            backgroundColor: Colors.red,
-                            color: Colors.blue
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
             );
           }
         },

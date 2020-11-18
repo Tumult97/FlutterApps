@@ -3,7 +3,6 @@ import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/pages/homepages/pinless.dart';
 import 'package:pav_telecoms/pages/homepages/quickSale.dart';
 import 'package:pav_telecoms/pages/homepages/vendors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -85,8 +84,8 @@ class _HomeState extends State<Home> {
         Navigator.pushNamed(context, "/reports", arguments: permissionsMap);
         return;
         break;
-      case 'Reports':
-        Navigator.pushNamed(context, "/reports");
+      case 'Balance':
+        Navigator.pushNamed(context, "/balance", arguments: permissionsMap);
         return;
         break;
     }

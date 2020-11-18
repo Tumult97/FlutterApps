@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class Reports extends StatefulWidget {
   @override
@@ -12,8 +11,8 @@ class _ReportsState extends State<Reports> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateFrom;
-    DateTime dateTo;
+    DateTime dateFrom = DateTime.now().add(new Duration(days: -7));
+    DateTime dateTo = DateTime.now();
     permissionsMap = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
@@ -81,7 +80,7 @@ class _ReportsState extends State<Reports> {
                 ],
               ),
             ),
-            onTap: () => Navigator.pushNamed(context, "/salessummary", arguments: permissionsMap),
+            onTap: () => Navigator.pushNamed(context, "/salessummary", arguments: {"permissions": permissionsMap, "dateFrom": dateFrom, "dateTo": dateTo}),
           ),
           GestureDetector(
             child: Card(

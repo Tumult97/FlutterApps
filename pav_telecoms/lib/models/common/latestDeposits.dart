@@ -6,7 +6,7 @@ class LatestDeposits {
   LatestDeposits({this.amount, this.created, this.reference});
 
   LatestDeposits.fromJson(Map<String, dynamic> json) {
-    amount = json['Amount'];
+    amount = double.parse(json['Amount'].toString());
     created = json['Created'];
     reference = json['Reference'];
   }

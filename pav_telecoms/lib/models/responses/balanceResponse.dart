@@ -2,16 +2,16 @@ import 'package:pav_telecoms/models/common/latestDeposits.dart';
 import 'package:pav_telecoms/models/common/status.dart';
 
 class BalanceResponse {
-  String timestamp;
+  DateTime timestamp;
   Status status;
   double available;
   double openingBalance;
-  int vouchers;
-  int deposits;
-  int adjustments;
-  int fees;
+  double vouchers;
+  double deposits;
+  double adjustments;
+  double fees;
   double closingBalance;
-  int creditLimit;
+  double creditLimit;
   List<LatestDeposits> latestDeposits;
 
   BalanceResponse(
@@ -28,17 +28,16 @@ class BalanceResponse {
         this.latestDeposits});
 
   BalanceResponse.fromJson(Map<String, dynamic> json) {
-    timestamp = json['Timestamp'];
-    status =
-    json['Status'] != null ? new Status.fromJson(json['Status']) : null;
-    available = json['Available'];
-    openingBalance = json['OpeningBalance'];
-    vouchers = json['Vouchers'];
-    deposits = json['Deposits'];
-    adjustments = json['Adjustments'];
-    fees = json['Fees'];
-    closingBalance = json['ClosingBalance'];
-    creditLimit = json['CreditLimit'];
+    timestamp = DateTime.now();
+    status = json['Status'] != null ? new Status.fromJson(json['Status']) : null;
+    available = double.parse(json['Available'].toString());
+    openingBalance = double.parse(json['OpeningBalance'].toString());
+    vouchers = double.parse(json['Vouchers'].toString());
+    deposits = double.parse(json['Deposits'].toString());
+    adjustments = double.parse(json['Adjustments'].toString());
+    fees = double.parse(json['Fees'].toString());
+    closingBalance = double.parse(json['ClosingBalance'].toString());
+    creditLimit = double.parse(json['CreditLimit'].toString());
     if (json['LatestDeposits'] != null) {
       latestDeposits = new List<LatestDeposits>();
       json['LatestDeposits'].forEach((v) {
