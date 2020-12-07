@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pav_telecoms/components/rounded_input_field.dart';
 import 'package:pav_telecoms/components/rounded_password_field.dart';
 import 'package:pav_telecoms/models/responses/loginResponse.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pav_telecoms/code/connection.dart' as api;
 
 class Login extends StatefulWidget {
@@ -15,7 +14,6 @@ class _LoginState extends State<Login> {
   String terminalId = "";
   String password = "";
   String deviceManufacturer;
-  SharedPreferences prefs;
   bool _isButtonDisabled = false;
   var function;
   DeviceInfoPlugin _deviceInfoPlugin;
@@ -25,7 +23,6 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     _deviceInfoPlugin = DeviceInfoPlugin();
-    setUpVariables();
   }
 
   @override
@@ -176,11 +173,6 @@ class _LoginState extends State<Login> {
       behavior: SnackBarBehavior.floating,
     );
     Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  void setUpVariables() async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.remove("Session");
   }
 
   Widget buildLoginButton(BuildContext context){

@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/models/responses/salesSummaryResponse.dart';
 import 'package:pav_telecoms/code/connection.dart' as api;
@@ -22,6 +24,68 @@ class _SalesSummaryState extends State<SalesSummary> {
   LoginResponse permissions;
   var report = "";
 
+  BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+  List<BluetoothDevice> _devices = [];
+  BluetoothDevice _device;
+  bool _connected = false;
+
+  @override
+  void initState(){
+    super.initState();
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    bool isConnected=await bluetooth.isConnected;
+    List<BluetoothDevice> devices = [];
+    setState(() {
+      _connected = isConnected;
+    });
+    if(isConnected){
+      print('Already connected');
+      return;
+    }
+    try {
+      devices = await bluetooth.getBondedDevices();
+      if(devices.length == 0){
+        return;
+      }
+      bluetooth.connect(devices[0]);
+      //showItemSnackbar("Connected", context);
+    } on PlatformException {
+      print('Already connected');
+    }
+
+    bluetooth.onStateChanged().listen((state) {
+      switch (state) {
+        case BlueThermalPrinter.CONNECTED:
+          setState(() {
+            _connected = true;
+          });
+          break;
+        case BlueThermalPrinter.DISCONNECTED:
+          setState(() {
+            _connected = false;
+          });
+          break;
+        default:
+        //print(state);
+          break;
+      }
+    });
+
+    if (!mounted) return;
+    setState(() {
+      _devices = devices;
+    });
+
+    if(isConnected) {
+      setState(() {
+        _connected=true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context).settings.arguments;
@@ -29,6 +93,9 @@ class _SalesSummaryState extends State<SalesSummary> {
     terminalId = permissionsMap["terminal"];
     report = "";
     permissions = LoginResponse.fromJson(permissionsMap["permissions"]);
+
+    dateTo = arguments["dateTo"];
+    dateFrom = arguments["dateFrom"];
 
     return Scaffold(
       appBar: AppBar(
@@ -103,20 +170,43 @@ class _SalesSummaryState extends State<SalesSummary> {
               ),
             );
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                slip,
-                RaisedButton(
-                  onPressed: () {},
-                  child: Text("Print"),
-                )
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  slip,
+                  RaisedButton(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    color: Colors.blue[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(29.0),
+                    ),
+                    child: Text(
+                      "PRINT",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
+                    ),
+                    onPressed: !_connected ? null : printVoucher,
+                  )
+                ],
+              ),
             );
           }
         },
       ),
     );
+  }
+
+  void printVoucher(){
+    response.report.forEach((element) {
+      bluetooth.printCustom(element.text, 0, element.centered ? 1 : 0);
+    });
+
+    bluetooth.printNewLine();
+    bluetooth.printNewLine();
+    bluetooth.printNewLine();
+    bluetooth.printNewLine();
   }
 }
 

@@ -4,8 +4,7 @@ class SalesSummaryRequest {
   String dateTo;
   int userId;
 
-  SalesSummaryRequest(
-      {this.terminalId, this.dateFrom, this.dateTo, this.userId});
+  SalesSummaryRequest({this.terminalId, this.dateFrom, this.dateTo, this.userId});
 
   SalesSummaryRequest.fromJson(Map<String, dynamic> json) {
     terminalId = json['TerminalId'];

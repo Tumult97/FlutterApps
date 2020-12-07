@@ -29,11 +29,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   device_info: ^0.4.2+9
-  rflutter_alert: ^1.0.3
-  fluttertoast: ^7.1.1
   permission_handler: ^5.0.1+1
-  flutter_blue: ^0.7.2
-  shared_preferences: ^0.5.12+2
   http: ^0.12.2
   package_info: ^0.4.0+16
   date_time_picker: ^1.0.2
@@ -41,10 +37,18 @@ dependencies:
   ticketview: ^1.0.0
   google_fonts: ^1.1.1
   intl: ^0.16.1
+  blue_thermal_printer: ^1.1.1
+  path_provider: ^1.6.24
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.8.1
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/icons/appicons/web_hi_res_512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
