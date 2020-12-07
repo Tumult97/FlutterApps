@@ -3,7 +3,6 @@ import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/pages/homepages/pinless.dart';
 import 'package:pav_telecoms/pages/homepages/quickSale.dart';
 import 'package:pav_telecoms/pages/homepages/vendors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     permissionsMap = ModalRoute.of(context).settings.arguments;
-    permissions = LoginResponse.fromJson(permissionsMap);
+    permissions = LoginResponse.fromJson(permissionsMap["permissions"]);
 
     if(permissions.allowWalletTransfer){
       menuItems.insert(4, "Wallet To Wallet");
@@ -66,9 +65,9 @@ class _HomeState extends State<Home> {
         ),
         body: TabBarView(
           children: [
-            QuickSale(5),
-            Vendors(5),
-            Pinless(5),
+            QuickSale(permissions),
+            Vendors(permissions),
+            Pinless(permissions),
           ],
         ),
       ),
@@ -78,8 +77,16 @@ class _HomeState extends State<Home> {
   void handleClick(String value) {
     switch (value) {
       case 'Logout':
+        Navigator.pushReplacementNamed(context, "/login");
+        return;
         break;
-      case 'Settings':
+      case 'Reports':
+        Navigator.pushNamed(context, "/reports", arguments: permissionsMap);
+        return;
+        break;
+      case 'Balance':
+        Navigator.pushNamed(context, "/balance", arguments: permissionsMap);
+        return;
         break;
     }
   }

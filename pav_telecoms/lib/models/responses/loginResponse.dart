@@ -37,8 +37,9 @@ class LoginResponse{
   bool allowLotto;
   bool allowOTTVend;
   bool allowWalletTransfer;
+  String manufacturer;
 
-  LoginResponse({this.status, this.isAdmin, this.clientId, this.userId, this.accessLevel, this.clientName, this.enableAdvancedPos, this.printStoreSlipCopy, this.printBarCodeOnStoreSlip, this.printBarcodeOnCustomerSlip, this.electricityType, this.allowSales, this.allowReprint, this.voucherReports, this.rica, this.shift, this.headerText1, this.headerText2, this.headerText3, this.footerText1, this.footerText2, this.footerText3, this.enablePasswordOnVend, this.whiteLabelCompanyName, this.electricityActive, this.vendorVoucherCounts, this.allowDSTV, this.smartCallVoucherCounts, this.allowPinlessElectrivityVending, this.mabonengVoucherCount, this.clientCode, this.allowLotto, this.allowOTTVend, this.allowWalletTransfer});
+  LoginResponse({this.status, this.isAdmin, this.clientId, this.userId, this.accessLevel, this.clientName, this.enableAdvancedPos, this.printStoreSlipCopy, this.printBarCodeOnStoreSlip, this.printBarcodeOnCustomerSlip, this.electricityType, this.allowSales, this.allowReprint, this.voucherReports, this.rica, this.shift, this.headerText1, this.headerText2, this.headerText3, this.footerText1, this.footerText2, this.footerText3, this.enablePasswordOnVend, this.whiteLabelCompanyName, this.electricityActive, this.vendorVoucherCounts, this.allowDSTV, this.smartCallVoucherCounts, this.allowPinlessElectrivityVending, this.mabonengVoucherCount, this.clientCode, this.allowLotto, this.allowOTTVend, this.allowWalletTransfer, this.manufacturer});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['Status'] != null ? new Status.fromJson(json['Status']) : null;
@@ -85,6 +86,7 @@ class LoginResponse{
     allowLotto = json['AllowLotto'];
     allowOTTVend = json['AllowOTTVend'];
     allowWalletTransfer = json['AllowWalletTransfer'];
+    manufacturer = json['Manufacturer'];
   }
 
   Map<String, dynamic> toMap() {
@@ -132,6 +134,7 @@ class LoginResponse{
     data['AllowLotto'] = this.allowLotto;
     data['AllowOTTVend'] = this.allowOTTVend;
     data['AllowWalletTransfer'] = this.allowWalletTransfer;
+    data['Manufacturer'] = this.manufacturer;
     return data;
   }
 }
