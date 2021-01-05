@@ -1,11 +1,9 @@
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pav_telecoms/components/rounded_input_field.dart';
 import 'package:pav_telecoms/components/rounded_password_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/code/connection.dart' as api;
-import 'dart:convert';
 
 class Login extends StatefulWidget {
   @override
@@ -15,7 +13,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String terminalId = "";
   String password = "";
-  SharedPreferences prefs;
+  String deviceManufacturer;
   bool _isButtonDisabled = false;
   var function;
   DeviceInfoPlugin _deviceInfoPlugin;
@@ -25,7 +23,6 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     _deviceInfoPlugin = DeviceInfoPlugin();
-    setUpVariables();
   }
 
   @override
@@ -41,9 +38,12 @@ class _LoginState extends State<Login> {
             );
           }
           else {
-            // final androidDeviceInfo = snapshot.data;
-            // terminalId = androidDeviceInfo.androidId;
-            terminalId = "06d598a7dede6530";
+            final androidDeviceInfo = snapshot.data;
+            terminalId = androidDeviceInfo.androidId;
+            //terminalId = "06d598a7dede6530";
+            terminalId = "20:c9:d0:7d:41:cf";
+            //terminalId = "86515003237147";
+            deviceManufacturer = androidDeviceInfo.manufacturer;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -113,8 +113,8 @@ class _LoginState extends State<Login> {
       _isButtonDisabled = true;
     });
 
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
+    //PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    //String version = packageInfo.version;
 
     if(password.isEmpty){
       showItemSnackBar("Password Empty. Please enter password to Continue", context);
@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    var response = await api.Connection().login(terminalId, password);
+    LoginResponse response = await api.Connection().login(terminalId, password);
 
     if(!response.status.success){
       showItemSnackBar(response.status.message, context);
@@ -134,9 +134,14 @@ class _LoginState extends State<Login> {
       return;
     }
 
+    response.manufacturer = deviceManufacturer;
     var resObj = response.toMap();
 
-    Navigator.pushReplacementNamed(context, "/home", arguments: resObj);
+    Map perms = new Map();
+    perms["permissions"] = resObj;
+    perms["terminal"] = terminalId;
+
+    Navigator.pushReplacementNamed(context, "/home", arguments: perms);
 
     // setState(() {
     //   _isButtonDisabled = false;
@@ -168,11 +173,6 @@ class _LoginState extends State<Login> {
       behavior: SnackBarBehavior.floating,
     );
     Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  void setUpVariables() async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.remove("Session");
   }
 
   Widget buildLoginButton(BuildContext context){

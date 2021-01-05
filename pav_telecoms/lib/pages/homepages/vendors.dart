@@ -1,61 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:pav_telecoms/models/responses/loginResponse.dart';
 import 'package:pav_telecoms/models/vendor.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-class Vendors extends StatefulWidget {
+class Vendors extends StatelessWidget {
   List<Vendor> vendorList = [];
   final List<Map<String, dynamic>> data = List();
 
-  Vendors(permissions){
-    vendorList.add(Vendor(name: "Vodacom", data: false, icon: "vodacom", network: "vodacom", dataIcon: ""));
-    vendorList.add(Vendor(name: "Vodacom Data", data: true, icon: "vodacom", network: "vodacom", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "MTN", data: false, icon: "mtn", network: "mtn", dataIcon: ""));
-    vendorList.add(Vendor(name: "MTN Data", data: true, icon: "mtn", network: "mtn", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Cell C", data: false, icon: "cellc", network: "cellc", dataIcon: ""));
-    vendorList.add(Vendor(name: "Cell C Data", data: true, icon: "cellc", network: "cellc", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Telkom", data: false, icon: "telkom", network: "telkom", dataIcon: ""));
-    vendorList.add(Vendor(name: "Telkom Data", data: true, icon: "telkom", network: "telkom", dataIcon: "-data"));
-    vendorList.add(Vendor(name: "Lotto", data: false, icon: "lotto", network: "lotto", dataIcon: ""));
-    vendorList.add(Vendor(name: "Virgin", data: false, icon: "virgin", network: "virgin", dataIcon: ""));
-    vendorList.add(Vendor(name: "Electricity", data: false, icon: "electricity", network: "electricity", dataIcon: ""));
-    vendorList.add(Vendor(name: "Rise", data: false, icon: "rise", network: "risetelecoms", dataIcon: ""));
-    vendorList.add(Vendor(name: "OTT Mobile", data: false, icon: "pav", network: "ottmobile", dataIcon: ""));
-    vendorList.add(Vendor(name: "Neotel", data: false, icon: "neotel", network: "neotel", dataIcon: ""));
-    vendorList.add(Vendor(name: "PAV Test", data: false, icon: "pav", network: "pav", dataIcon: ""));
+  Vendors(LoginResponse permissions){
+
+    permissions.vendorVoucherCounts.forEach((element) {
+      switch(element.vendorId) {
+        case 1:
+          vendorList.add(Vendor(name: "Vodacom", data: false, icon: "vodacom", network: 1, dataIcon: ""));
+          vendorList.add(Vendor(name: "Vodacom Data", data: true, icon: "vodacom", network: 1, dataIcon: "-data"));
+          break;
+        case 2:
+          vendorList.add(Vendor(name: "MTN", data: false, icon: "mtn", network: 2, dataIcon: ""));
+          break;
+        case 26:
+          vendorList.add(Vendor(name: "MTN Data", data: true, icon: "mtn", network: 26, dataIcon: "-data"));
+          break;
+        case 3:
+          vendorList.add(Vendor(name: "Cell C", data: false, icon: "cellc", network: 3, dataIcon: ""));
+          vendorList.add(Vendor(name: "Cell C Data", data: true, icon: "cellc", network: 3, dataIcon: "-data"));
+          break;
+        case 23:
+          vendorList.add(Vendor(name: "Telkom", data: false, icon: "telkom", network: 23, dataIcon: ""));
+          break;
+        case 4:
+          vendorList.add(Vendor(name: "Telkom Data", data: true, icon: "telkom", network: 4, dataIcon: "-data"));
+          break;
+        case 13:
+          vendorList.add(Vendor(name: "Virgin", data: false, icon: "virgin", network: 13, dataIcon: ""));
+          break;
+        case 29:
+          vendorList.add(Vendor(name: "Neotel", data: false, icon: "neotel", network: 29, dataIcon: ""));
+          break;
+        case 12:
+          vendorList.add(Vendor(name: "PAV Test", data: false, icon: "pav", network: 12, dataIcon: ""));
+          break;
+      }
+    });
+
+    if(permissions.electricityActive){
+      vendorList.add(Vendor(name: "Electricity", data: false, icon: "electricity", network: -1, dataIcon: ""));
+    }
+
+    if(permissions.mabonengVoucherCount){
+      vendorList.add(Vendor(name: "Rise", data: false, icon: "rise", network: 0, dataIcon: ""));
+    }
+
+    if(permissions.allowLotto && permissions.manufacturer == "SUNMI"){
+      vendorList.add(Vendor(name: "Lotto", data: false, icon: "lotto", network: -1, dataIcon: ""));
+    }
+
+    if(permissions.allowOTTVend){
+      vendorList.add(Vendor(name: "OTT Mobile", data: false, icon: "pav", network: 0, dataIcon: ""));
+    }
   }
 
-  @override
-  _VendorsState createState() => _VendorsState(vendorList);
-}
 
-class _VendorsState extends State<Vendors> {
-  List<Vendor> vendorList = [];
-  // PrinterBluetoothManager _printerManager = PrinterBluetoothManager();
-  // List<PrinterBluetooth> _devices = [];
-  // String _devicesMsg;
-  // BluetoothManager bluetoothManager = BluetoothManager.instance;
-
-  _VendorsState(List<Vendor> list){
-    vendorList = list;
-    checkPermissions();
-    // if (Platform.isAndroid) {
-    //   bluetoothManager.state.listen((val) {
-    //     print('state = $val');
-    //     if (!mounted) return;
-    //     if (val == 12) {
-    //       print('on');
-    //       initPrinter();
-    //     } else if (val == 10) {
-    //       print('off');
-    //       setState(() => _devicesMsg = 'Bluetooth Disconnect!');
-    //     }
-    //   });
-    // } else {
-    //   initPrinter();
-    // }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,89 +123,4 @@ class _VendorsState extends State<Vendors> {
     );
     Scaffold.of(context).showSnackBar(snackBar);
   }
-
-  void checkPermissions() async {
-    print("---------------------------------------------------------------------------------");
-    FlutterBlue flutterBlue = FlutterBlue.instance;
-    // Start scanning
-    flutterBlue.startScan(timeout: Duration(seconds: 10));
-    var subscription = flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-    });
-
-// Stop scanning
-    flutterBlue.stopScan();
-  }
-
-  // Future sleep() {
-  //   return new Future.delayed(const Duration(seconds: 11), () => "1");
-  // }
-  //
-  // void initPrinter() async {
-  //   _printerManager.startScan(Duration(seconds: 10));
-  //   await sleep();
-  //   _printerManager.scanResults.listen((val) {
-  //     if (!mounted) return;
-  //     setState(() => _devices = val);
-  //     if (_devices.isEmpty) setState(() => _devicesMsg = 'No Devices');
-  //   });
-  // }
-  //
-  // Future<void> _startPrint(PrinterBluetooth printer) async {
-  //   _printerManager.selectPrinter(printer);
-  //   final result = await _printerManager.printTicket(await _ticket(PaperSize.mm80));
-  //   showDialog(
-  //     context: context,
-  //     builder: (_) => AlertDialog(
-  //       content: Text(result.msg),
-  //     ),
-  //   );
-  // }
-  //
-  // Future<Ticket> _ticket(PaperSize paper) async {
-  //   final ticket = Ticket(paper);
-  //   int total = 0;
-  //
-  //   // Image assets
-  //   final ByteData data = await rootBundle.load('assets/store.png');
-  //   final Uint8List bytes = data.buffer.asUint8List();
-  //   final FileImage.Image image = FileImage.decodeImage(bytes);
-  //   ticket.image(image);
-  //   ticket.text(
-  //     'TOKO KU',
-  //     styles: PosStyles(align: PosAlign.center,height: PosTextSize.size2,width: PosTextSize.size2),
-  //     linesAfter: 1,
-  //   );
-  //
-  //   for (var i = 0; i < widget.data.length; i++) {
-  //     total += widget.data[i]['total_price'];
-  //     ticket.text(widget.data[i]['title']);
-  //     ticket.row([
-  //       PosColumn(
-  //           text: '${widget.data[i]['price']} x ${widget.data[i]['qty']}',
-  //           width: 6),
-  //       PosColumn(text: 'Rp ${widget.data[i]['total_price']}', width: 6),
-  //     ]);
-  //   }
-  //
-  //   ticket.feed(1);
-  //   ticket.row([
-  //     PosColumn(text: 'Total', width: 6, styles: PosStyles(bold: true)),
-  //     PosColumn(text: 'Rp $total', width: 6, styles: PosStyles(bold: true)),
-  //   ]);
-  //   ticket.feed(2);
-  //   ticket.text('Thank You',styles: PosStyles(align: PosAlign.center, bold: true));
-  //   ticket.cut();
-  //
-  //   return ticket;
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   _printerManager.stopScan();
-  //   super.dispose();
-  // }
 }
