@@ -67,13 +67,14 @@ class LoginResponse{
     whiteLabelCompanyName = json['WhiteLabelCompanyName'];
     electricityActive = json['ElectricityActive'];
     if (json['VendorVoucherCounts'] != null) {
-      vendorVoucherCounts = new List<PinnedVendorVoucherCount>();
+      vendorVoucherCounts = <PinnedVendorVoucherCount>[];
       json['VendorVoucherCounts'].forEach((v) {
         vendorVoucherCounts.add(new PinnedVendorVoucherCount.fromJson(v));
       });
     }
     allowDSTV = json['AllowDSTV'];
     if (json['SmartCallVoucherCounts'] != null) {
+      // ignore: deprecated_member_use
       smartCallVoucherCounts = new List<SmartCallMarginVoucherCount>();
       json['SmartCallVoucherCounts'].forEach((v) {
         smartCallVoucherCounts.add(new SmartCallMarginVoucherCount.fromJson(v));

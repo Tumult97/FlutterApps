@@ -60,7 +60,7 @@ class _VendorsState extends State<Vendors> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
         child: GridView.count(
